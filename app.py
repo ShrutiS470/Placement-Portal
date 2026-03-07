@@ -1,70 +1,34 @@
-from flask import Flask, render_template, request, redirect, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, config, render_template, request, redirect, url_for
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///placements.sqlite3'
+from models import db, user_datastore, company, student, drive, application, placement
+from flask_security import Security, auth_required, roles_required, roles_accepted #pip install flask-security-too
+from datetime import datetime
 
-db = SQLAlchemy(app)
+def create_app():
+    init_app = Flask(__name__)
+    from config import localdev
+    init_app.config.from_object(localdev)
 
-class user(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(20), nullable=False)  # 'student', 'admin', 'company'
+    security = Security(init_app, user_datastore)
+    db.init_app(init_app)
 
-class company(db.Model):
-    com_id = db.Column(db.Integer, primary_key=True)
-    com_name = db.Column(db.String(100), nullable=False)
-    HR_contact = db.Column(db.String(100), nullable=False)
-    website = db.Column(db.String(100), nullable=False)
-    industry = db.Column(db.String(100), nullable=False)
-    location = db.Column(db.String(100), nullable=False)
-    approval_status = db.Column(db.String(20), nullable=False)  # 'pending', 'approved', 'rejected'
+    from flask_restful import Api
+    init_api = Api(init_app)
 
-class student(db.Model):
-    stu_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
-    degree = db.Column(db.String(100), nullable=False)
-    branch = db.Column(db.String(100), nullable=False)
-    year_of_passing = db.Column(db.Integer, nullable=False)
+    return init_app, init_api
 
-class drive(db.Model):
-    drive_id = db.Column(db.Integer, primary_key=True)
-    com_id = db.Column(db.Integer, db.ForeignKey('company.com_id'), nullable=False)
-    job_title = db.Column(db.String(100), nullable=False)
-    job_description = db.Column(db.Text, nullable=False)
-    eligibility_criteria = db.Column(db.Text, nullable=False)
-    application_deadline = db.Column(db.DateTime, nullable=False)
-    approval_status = db.Column(db.String(20), nullable=False)  # 'pending', 'approved', 'rejected'
-    
-class application(db.Model):
-    app_id = db.Column(db.Integer, primary_key=True)
-    stu_id = db.Column(db.Integer, db.ForeignKey('student.stu_id'), nullable=False)
-    job_id = db.Column(db.Integer, db.ForeignKey('drive.drive_id'), nullable=False)
-    status = db.Column(db.String(20), nullable=False)  # 'applied', 'shortlisted', 'rejected'
-    date = db.Column(db.DateTime, nullable=False)
+app, api = create_app()
 
-class placement(db.Model):
-    place_id = db.Column(db.Integer, primary_key=True)
-    stu_id = db.Column(db.Integer, db.ForeignKey('student.stu_id'), nullable=False)
-    com_id = db.Column(db.Integer, db.ForeignKey('company.com_id'), nullable=False)
-    job_title = db.Column(db.String(100), nullable=False)
-    salary = db.Column(db.String(100), nullable=False)
-    date_of_joining = db.Column(db.DateTime, nullable=False)
 
-with app.app_context():
-    db.create_all()
+@app.route('/')
+@auth_required('token')#decorator to require authentication for this route, using token-based authentication
+@roles_required('student')#specifies that the user must have the 'student' role to access this route
+def home():
+    return {"message": "Welcome to the Placement Portal API!"}
 
-    admin_exists = user.query.filter_by(username='admin').first()
-    if not admin_exists:
-        admin_password = generate_password_hash('admin123')
-        admin = user(username='admin', email='admin@clg.in', password=admin_password, role='admin')
-        db.session.add(admin)
-        db.session.commit()
+from routes.auth import signup, signin
+api.add_resource(signup, '/signup')
+api.add_resource(signin, '/signin')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
