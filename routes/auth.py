@@ -46,4 +46,4 @@ class signin(Resource):
         user = user_datastore.find_user(email=email)
         if  user and user.password == password:
             token = user.get_auth_token()
-            return make_response(jsonify({"status": "signin successful", "auth_token": token}), 200)
+            return make_response(jsonify({"status": "signin successful", "auth_token": token, "roles": user.roles[0].name}), 200)

@@ -37,17 +37,16 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 class company(db.Model):
     com_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     com_name = db.Column(db.String(100), nullable=False)
-    HR_contact = db.Column(db.String(100), nullable=False)
     website = db.Column(db.String(100), nullable=False)
     industry = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(100), nullable=False)
-    approval_status = db.Column(db.String(20), nullable=False)  # 'pending', 'approved', 'rejected'
 
 class student(db.Model):
     stu_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     degree = db.Column(db.String(100), nullable=False)
     branch = db.Column(db.String(100), nullable=False)
@@ -65,7 +64,7 @@ class drive(db.Model):
 class application(db.Model):
     app_id = db.Column(db.Integer, primary_key=True)
     stu_id = db.Column(db.Integer, db.ForeignKey('student.stu_id'), nullable=False)
-    job_id = db.Column(db.Integer, db.ForeignKey('drive.drive_id'), nullable=False)
+    drive_id = db.Column(db.Integer, db.ForeignKey('drive.drive_id'), nullable=False)
     status = db.Column(db.String(20), nullable=False)  # 'applied', 'shortlisted', 'rejected'
     date = db.Column(db.DateTime, nullable=False)
 

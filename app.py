@@ -14,13 +14,15 @@ def create_app():
 
     from flask_restful import Api
     init_api = Api(init_app)
-
+    from flask_cors import CORS
+    CORS(init_app)
+    
     return init_app, init_api
 
 app, api = create_app()
 
 
-@app.route('/')
+@app.route('/', methods=['POSt'])
 @auth_required('token')#decorator to require authentication for this route, using token-based authentication
 @roles_required('student')#specifies that the user must have the 'student' role to access this route
 def home():
