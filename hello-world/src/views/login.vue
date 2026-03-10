@@ -1,15 +1,41 @@
 <template>
-  <h1>Welcome to Placement Cell</h1>
+  <div class="container mt-5">
+    <div class="card shadow p-4 mx-auto" style="max-width: 400px;">
+      
+      <h2 class="text-center text-primary mb-4">
+        Welcome to Placement Cell
+      </h2>
 
-  <input type="text" placeholder="Email" v-model="email" />
-  <input type="password" placeholder="Password" v-model="password" />
+      <input 
+        type="text" 
+        placeholder="Email" 
+        v-model="email"
+        class="form-control mb-3"
+      />
 
-  <button type="button" @click="send_post_request">Login</button>
+      <input 
+        type="password" 
+        placeholder="Password" 
+        v-model="password"
+        class="form-control mb-3"
+      />
 
-  <nav>
-    <router-link to="/com_register">Company Registration</router-link> 
-    <router-link to="/stud_register">Student Registration</router-link>
-  </nav>
+      <button 
+        type="button"
+        class="btn btn-primary w-100 mb-3"
+        @click="send_post_request"
+      >
+        Login
+      </button>
+
+      <nav class="d-flex justify-content-between">
+        <router-link class="btn btn-outline-secondary btn-sm" to="/register">
+          Register Now
+        </router-link>
+      </nav>
+
+    </div>
+  </div>
 </template>
 
 <script>
@@ -37,12 +63,19 @@ export default {
       })
       .then(response => {
         console.log("correct response:", response);
+
         if (response.data.status == "signin successful") {
           localStorage.setItem("auth_token", response.data.auth_token)
           localStorage.setItem("role", response.data.roles)
+
           this.msg = null
           this.res = response.data.message
-          this.$router.push('/test')
+
+          if (response.data.roles.includes("company")) {
+            this.$router.push('/com_dashboard');
+          } else if (response.data.roles.includes("student")) {
+            this.$router.push('/stud_dashboard');
+          }
         }
       })
       .catch(error => {

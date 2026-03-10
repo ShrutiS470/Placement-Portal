@@ -37,7 +37,7 @@ user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 
 class company(db.Model):
     com_id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, unique=True)
     com_name = db.Column(db.String(100), nullable=False)
     website = db.Column(db.String(100), nullable=False)
     industry = db.Column(db.String(100), nullable=False)

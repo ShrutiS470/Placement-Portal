@@ -30,7 +30,48 @@ const routes = [
     // this generates a separate chunk (test.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "login" */ '../views/login.vue')
+  },
+  {
+    path: '/com_register',
+    name: 'com_register',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "com_register" */ '../views/CompanyRegister.vue')
+  },
+  {
+    path: '/stud_register',
+    name: 'stud_register',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "stud_register" */ '../views/StudentRegister.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "register" */ '../views/Register.vue')
+  },
+  {
+    path: '/com_dashboard',
+    name: 'com_dashboard',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "com_dashboard" */ '../views/CompanyDashboard.vue')
+  },
+  {
+    path: '/stud_dashboard',
+    name: 'stud_dashboard',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "stud_dashboard" */ '../views/StudentDashboard.vue')
   }
+
 ]
 
 const router = createRouter({

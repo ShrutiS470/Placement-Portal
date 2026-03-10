@@ -30,7 +30,7 @@ class signup(Resource):
             user_datastore.add_role_to_user(user, role)
         db.session.commit()
 
-        return make_response(jsonify({"status": "success"}), 200)
+        return make_response(jsonify({"status": "success", "id": user.id}), 200)
 
 #@app.route('/signin', methods=['POST'])
 class signin(Resource):

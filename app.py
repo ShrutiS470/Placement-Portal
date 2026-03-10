@@ -32,5 +32,9 @@ from routes.auth import signup, signin
 api.add_resource(signup, '/signup')
 api.add_resource(signin, '/signin')
 
+from routes.registration import company_registration, student_registration
+api.add_resource(company_registration, '/com_register')
+api.add_resource(student_registration, '/stud_register')
+
 if __name__ == '__main__':
     app.run()
