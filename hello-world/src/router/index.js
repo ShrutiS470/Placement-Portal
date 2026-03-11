@@ -70,6 +70,14 @@ const routes = [
     // this generates a separate chunk (test.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "stud_dashboard" */ '../views/StudentDashboard.vue')
+  },
+  {
+    path: '/admin_dashboard',
+    name: 'admin_dashboard',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "admin_dashboard" */ '../views/AdminDashboard.vue')
   }
 
 ]

@@ -2,6 +2,8 @@ from flask_restful import Resource
 from flask import request, jsonify, make_response
 
 class Testapi(Resource):
+    @cache.cached()
+    @auth_token_required
     def get(self):
         return make_response(jsonify({"status": "success"}), 200)
     

@@ -39,8 +39,11 @@
       >
         Register
       </button>
-
-      <p v-if="res" class="text-success text-center">{{ res }}</p>
+      <nav class="d-flex justify-content-between">
+        <router-link class="btn btn-outline-secondary btn-sm" to="/login">
+          Already have an account? Login
+        </router-link>
+      </nav>
 
     </div>
   </div>

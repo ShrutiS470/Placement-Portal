@@ -30,7 +30,7 @@
 
       <nav class="d-flex justify-content-between">
         <router-link class="btn btn-outline-secondary btn-sm" to="/register">
-          Register Now
+          Don't have an account? Register
         </router-link>
       </nav>
 
@@ -75,6 +75,8 @@ export default {
             this.$router.push('/com_dashboard');
           } else if (response.data.roles.includes("student")) {
             this.$router.push('/stud_dashboard');
+          }else if (response.data.roles.includes("admin")) {
+            this.$router.push('/admin_dashboard');
           }
         }
       })

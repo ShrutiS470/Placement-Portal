@@ -42,6 +42,7 @@ class company(db.Model):
     website = db.Column(db.String(100), nullable=False)
     industry = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(100), nullable=False)
+    user = db.relationship("User", backref="companies")
 
 class student(db.Model):
     stu_id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +52,7 @@ class student(db.Model):
     degree = db.Column(db.String(100), nullable=False)
     branch = db.Column(db.String(100), nullable=False)
     year_of_passing = db.Column(db.Integer, nullable=False)
+    user = db.relationship("User", backref="students")
 
 class drive(db.Model):
     drive_id = db.Column(db.Integer, primary_key=True)
@@ -60,6 +62,7 @@ class drive(db.Model):
     eligibility_criteria = db.Column(db.Text, nullable=False)
     application_deadline = db.Column(db.DateTime, nullable=False)
     approval_status = db.Column(db.String(20), nullable=False)  # 'pending', 'approved', 'rejected'
+    company = db.relationship("company", backref="drives")
     
 class application(db.Model):
     app_id = db.Column(db.Integer, primary_key=True)
@@ -67,6 +70,8 @@ class application(db.Model):
     drive_id = db.Column(db.Integer, db.ForeignKey('drive.drive_id'), nullable=False)
     status = db.Column(db.String(20), nullable=False)  # 'applied', 'shortlisted', 'rejected'
     date = db.Column(db.DateTime, nullable=False)
+    student = db.relationship("student", backref="applications")
+    drive = db.relationship("drive", backref="applications")
 
 class placement(db.Model):
     place_id = db.Column(db.Integer, primary_key=True)
@@ -75,3 +80,5 @@ class placement(db.Model):
     job_title = db.Column(db.String(100), nullable=False)
     salary = db.Column(db.String(100), nullable=False)
     date_of_joining = db.Column(db.DateTime, nullable=False)
+    student = db.relationship("student", backref="placements")
+    company = db.relationship("company", backref="placements")
