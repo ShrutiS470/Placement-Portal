@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mt-4">
     <div class="card shadow p-4 mx-auto" style="max-width: 400px;">
       
       <h2 class="text-center text-primary mb-4">

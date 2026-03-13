@@ -78,6 +78,22 @@ const routes = [
     // this generates a separate chunk (test.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "admin_dashboard" */ '../views/AdminDashboard.vue')
+  },
+    {
+      path: '/drive_details/:id',
+      name: 'drive_details',
+      // route level code-splitting
+      // this generates a separate chunk (test.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "drive_details" */ '../views/DriveDetails.vue')
+    },
+    {
+    path: '/application_details/:id',
+    name: 'application_details',
+    // route level code-splitting
+    // this generates a separate chunk (test.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "application_details" */ '../views/ApplicationDetails.vue')
   }
 
 ]

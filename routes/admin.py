@@ -2,14 +2,15 @@ from flask import request, jsonify, make_response
 from flask_restful import Resource
 from models import db, user_datastore, company, student, application, drive
 from flask_security import Security, auth_required, roles_required, roles_accepted
+from caching import cache
 
 class AdminDashboard(Resource):
     @auth_required('token')
-    #@roles_required('student')
-    #@cache.cached()
+    @roles_required('admin')
+    @cache.cached()
     def get(self):
         # Get all companies
-        companies = company.query.all()
+        companies = company.query.limit(3).all()
         company_list = []
         for comp in companies:
             company_list.append({
@@ -19,14 +20,14 @@ class AdminDashboard(Resource):
             })
         
         # Get all students
-        students = student.query.all()
+        students = student.query.limit(3).all()
         student_list = []
         for stud in students:
             student_list.append({
                 'id': stud.stu_id,
                 'name': stud.name,
                 })
-        drives = drive.query.all()
+        drives = drive.query.limit(3).all()
         drive_list = []
         for dr in drives:
             drive_list.append({
@@ -35,7 +36,7 @@ class AdminDashboard(Resource):
                 'company': dr.company.com_name
             })
     
-        applications = application.query.all()
+        applications = application.query.limit(3).all()
         application_list = []
         for app in applications:
             application_list.append({

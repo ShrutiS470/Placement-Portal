@@ -94,5 +94,8 @@ api.add_resource(student_registration, '/stud_register')
 from routes.admin import AdminDashboard
 api.add_resource(AdminDashboard, '/admin')
 
+from routes.drive import Drive
+api.add_resource(Drive, '/drive/<int:id>')
+
 if __name__ == '__main__':
     app.run()

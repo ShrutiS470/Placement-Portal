@@ -1,9 +1,11 @@
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 from models import db, user_datastore
+from caching import cache
 
 #@app.route('/signup', methods=['POST'])
 class signup(Resource):
+    @cache.cached()
     def post(self):
         data = request.json
         email = data.get('email')

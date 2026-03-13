@@ -1,46 +1,59 @@
 <template>
-  <div class="container mt-5">      
+  <div class="container mt-5">
+    <div class="card shadow p-4 mx-auto" style="max-width: 800px;">     
       <h2 class="text-center text-primary mb-4">
         Welcome Admin
       </h2>
-      <table>
-        <thead>Registered Company</thead>
+      <div class="card-header bg-primary text-white">
+      Registered Companies
+    </div>
+      <table class="table table-striped table-hover">
         <tr v-for="comp in company" :key="comp.id">
-          <td v-if="company.status">{{ company.name }}</td>
+          <td v-if="comp.status">{{ comp.name }}</td>
         </tr>
       </table>
-      
-      <table>
-        <thead>Registered Students</thead>
+      <div class="card-header bg-primary text-white">
+      Registered Students
+    </div>      
+      <table class="table table-striped table-hover">
         <tr v-for="stud in student" :key="stud.id">
           <td>{{ stud.name }}</td>
         </tr>
       </table>
-
-      <table>
-        <thead>Company Application</thead>
+      <div class="card-header bg-primary text-white">
+      Company Applications
+    </div>
+      <table class="table table-striped table-hover">
         <tr v-for="comp in company" :key="comp.id">
           <td v-if="comp.status !== true">{{ comp.name }}</td>
         </tr>
       </table>
-
-      <table>
-        <thead>Ongoing Drive</thead>
+      <div class="card-header bg-primary text-white">
+      Ongoing Drives
+    </div>
+      <table class="table table-striped table-hover">
         <tr v-for="dr in drive" :key="dr.id">
           <td>{{ dr.job }}</td>
           <td>{{ dr.company }}</td>
+          <td><router-link class="btn btn-outline-secondary btn-sm" :to="`/drive_details/${dr.id}`">
+          View Details
+        </router-link></td>
         </tr>
       </table>
-      
-      <table>
-        <thead>Student Application</thead>
-        <tr v-for="app in application":key=stu.id>
+      <div class="card-header bg-primary text-white">
+      Student Applications
+    </div>
+      <table class="table table-striped table-hover">
+        <tr v-for="app in application":key=app.id>
           <td>{{ app.student }}</td>
           <td>{{ app.drive }}</td>
-          <td>{{ company }}</td>
+          <td>{{ app.company }}</td>
+          <td><router-link class="btn btn-outline-secondary btn-sm" :to="`/application_details/${app.id}`">
+          View Details
+        </router-link></td>
         </tr>
       </table>
-      
+      </div>
     </div>
 </template>
 
@@ -71,11 +84,9 @@ export default {
   },
   mounted() {
     console.log("Sending GET request...")
-    axios.get("http://localhost:5000/admin",{
-        headers : {
-          'Authentication-Token': this.token
-        }
-      })
+    axios.get("http://localhost:5000/admin", {
+      headers: { 'Authorization': this.token }
+        })
       .then(response => {
 
         console.log("correct response:", response)
