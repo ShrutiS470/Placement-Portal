@@ -100,5 +100,8 @@ api.add_resource(Drive, '/drive/<int:id>')
 from routes.application import Application
 api.add_resource(Application, '/application/<int:id>')
 
+from routes.Company import Company
+api.add_resource(Company, '/company/<int:id>')
+
 if __name__ == '__main__':
     app.run()

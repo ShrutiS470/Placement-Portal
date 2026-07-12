@@ -67,6 +67,7 @@ export default {
         if (response.data.status == "signin successful") {
           localStorage.setItem("auth_token", response.data.auth_token)
           localStorage.setItem("role", response.data.roles)
+          localStorage.setItem("id", response.data.id)
 
           this.msg = null
           this.res = response.data.message
