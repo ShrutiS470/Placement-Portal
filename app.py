@@ -97,5 +97,8 @@ api.add_resource(AdminDashboard, '/admin')
 from routes.drive import Drive
 api.add_resource(Drive, '/drive/<int:id>')
 
+from routes.application import Application
+api.add_resource(Application, '/application/<int:id>')
+
 if __name__ == '__main__':
     app.run()
