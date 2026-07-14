@@ -5,7 +5,10 @@
         Welcome {{ name }}
       </h2>
       <div class="card-header bg-primary text-white">
-      Ongoing Drives
+      Upcoming Drives
+      <router-link class="btn btn-outline-secondary btn-sm" :to="`/create_drive`">
+          Create New Drive
+        </router-link>
     </div>
       <table class="table table-striped table-hover">
         <tr v-for="dr in drives" :key="dr.id">
@@ -58,7 +61,7 @@ export default {
         .then(response => {
             console.log("correct response:", response);
             this.email = response.data.email;
-            this.id = response.data.id;
+            localStorage.setItem("Com_id", response.data.id);
             this.name = response.data.name;
             this.status = response.data.status;
             this.drives = response.data.drives;

@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request, jsonify, make_response
 from flask_restful import Resource
 from models import db, user_datastore, company, student, application, drive
@@ -20,3 +21,22 @@ class Drive(Resource):
             'company': dr.company.com_name
         }
         return make_response(jsonify(drive_data), 200)
+
+class CreateDrive(Resource):
+    @auth_required('token')
+    @roles_required('company')
+    def post(self):
+        data = request.get_json()
+        com_id = data.get('com_id')
+        job_title = data.get('job_title')
+        job_description = data.get('job_description')
+        eligibility_criteria = data.get('eligibility_criteria')
+        application_deadline = data.get('application_deadline')
+        application_deadline = datetime(*map(int, application_deadline.split('-'))) if application_deadline else None
+
+        if not all([com_id, job_title, job_description, eligibility_criteria, application_deadline]):
+            return make_response(jsonify({'message': 'Missing required fields'}), 400)
+        new_drive = drive(com_id=com_id, job_title=job_title, job_description=job_description, eligibility_criteria=eligibility_criteria, application_deadline=application_deadline, approval_status='approved')
+        db.session.add(new_drive)
+        db.session.commit()
+        return make_response(jsonify({'message': 'Drive created successfully', 'drive_id': new_drive.drive_id}), 201)

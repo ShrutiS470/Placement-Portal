@@ -94,14 +94,17 @@ api.add_resource(student_registration, '/stud_register')
 from routes.admin import AdminDashboard
 api.add_resource(AdminDashboard, '/admin')
 
-from routes.drive import Drive
+from routes.drive import Drive, CreateDrive
 api.add_resource(Drive, '/drive/<int:id>')
+api.add_resource(CreateDrive, '/create_drive')
 
 from routes.application import Application
 api.add_resource(Application, '/application/<int:id>')
 
-from routes.Company import Company
+from routes.Company import Company, DriveApplications
+api.add_resource(DriveApplications, '/drive_applications/<int:id>')
 api.add_resource(Company, '/company/<int:id>')
+
 
 if __name__ == '__main__':
     app.run()

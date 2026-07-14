@@ -28,3 +28,22 @@ class Company(Resource):
             })
         company_data['drives'] = drive_list
         return make_response(jsonify(company_data), 200)
+
+class DriveApplications(Resource):
+    @auth_required('token')
+    @roles_accepted('company','admin')
+    @cache.cached()
+    def get(self, id):
+        dr = drive.query.filter_by(drive_id=id).first()
+        if not dr:
+            return make_response(jsonify({'message': 'Drive not found'}), 404)
+        applications = application.query.filter_by(drive_id=dr.drive_id).all()
+        application_list = []
+        for app in applications:
+            application_list.append({
+                'id': app.app_id,
+                'student': app.student.name,
+                'department': app.student.branch,
+                'status': app.status
+            })
+        return make_response(jsonify(application_list), 200)     
