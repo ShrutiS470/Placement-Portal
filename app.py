@@ -105,6 +105,9 @@ from routes.Company import Company, DriveApplications
 api.add_resource(DriveApplications, '/drive_applications/<int:id>')
 api.add_resource(Company, '/company/<int:id>')
 
+from routes.Student import StudentDashboard
+api.add_resource(StudentDashboard, '/student_dashboard/<int:id>')
+
 
 if __name__ == '__main__':
     app.run()

@@ -104,6 +104,14 @@ const routes = [
       component: () => import(/* webpackChunkName: "drive_application" */ '../views/DriveApplication.vue')
     },
     {
+      path: '/application_history/:id',
+      name: 'application_history',
+      // route level code-splitting
+      // this generates a separate chunk (test.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "application_history" */ '../views/ApplicationHistory.vue')
+    },
+    {
     path: '/application_details/:id',
     name: 'application_details',
     // route level code-splitting
