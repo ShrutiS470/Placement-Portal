@@ -21,3 +21,17 @@ class Application(Resource):
             'status': app.status
         }
         return make_response(jsonify(application_data), 200)
+    
+    @auth_required('token')
+    @roles_accepted('company')
+    def put(self, id):
+        app = application.query.filter_by(app_id=id).first()
+        if not app:
+            return make_response(jsonify({'message': 'Application not found'}), 404)
+        data = request.get_json()
+        status = data.get('status')
+        if status not in ['Applied', 'Shortlisted', 'Rejected', 'Selected']:
+            return make_response(jsonify({'message': 'Invalid status value'}), 400)
+        app.status = status
+        db.session.commit()
+        return make_response(jsonify({'message': 'Application status updated successfully'}), 200)

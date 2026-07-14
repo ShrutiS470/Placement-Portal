@@ -14,7 +14,7 @@
         <tr v-for="dr in drives" :key="dr.id">
           <td>{{ dr.job }}</td>
           <td>{{ dr.company }}</td>
-          <td><router-link class="btn btn-outline-secondary btn-sm" :to="`/drive_details/${dr.id}`">
+          <td><router-link class="btn btn-outline-secondary btn-sm" :to="`/drive_application/${dr.id}`">
           View Details
         </router-link></td>
         </tr>

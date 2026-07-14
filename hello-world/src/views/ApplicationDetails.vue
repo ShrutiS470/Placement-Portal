@@ -4,7 +4,7 @@
         <p>{{ application.department }}</p>
         <p><strong>{{ application.drive }}</strong></p>
         <p> {{ application.company }}</p>
-        <div v-if="userRole === 'company'" class="mb-3">
+        <div v-if="role === 'company'" class="mb-3">
             <label for="statusDropdown" class="form-label">Status:</label>
             <select id="statusDropdown" v-model="application.status" class="form-select form-select-sm">
                 <option value="Applied">Applied</option>
@@ -14,7 +14,7 @@
             </select>
         </div>
         <p v-else>Status: {{ application.status }}</p>
-        <button v-if="userRole === 'company'" @click="saveStatus" class="btn btn-primary btn-sm">
+        <button v-if="role === 'company'" @click="saveStatus" class="btn btn-primary btn-sm">
         Save Status
         </button>
         <button @click="goBack" class="btn btn-outline-secondary btn-sm">
@@ -30,11 +30,13 @@ export default {
     data() {
         return {
             token: null,
+            role: null,
             application: ""
         };
     },
     mounted() {
         this.token = localStorage.getItem("auth_token");
+        this.role = localStorage.getItem("role");
         const id = this.$route.params.id;
         axios.get(`http://localhost:5000/application/${id}`, {
             headers: {
@@ -53,6 +55,24 @@ export default {
     methods: {
         goBack() {
             this.$router.go(-1);
+        },
+        saveStatus() {
+            const id = this.$route.params.id;
+            axios.put(`http://localhost:5000/application/${id}`, {
+                status: this.application.status
+            }, {
+                headers: {
+                    'Authorization': this.token
+                }
+            })
+            .then(response => {
+                console.log("correct response:", response);
+                alert("Status updated successfully!");
+            })
+            .catch(error => {
+                console.log("error response:", error);
+                alert("Failed to update status.");
+            });
         }
     },
 }

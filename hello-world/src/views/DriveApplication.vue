@@ -5,7 +5,7 @@
         Application Received
       </h2>
       <div class="card-header bg-primary text-white">
-        {{ application.drive.job_title }}
+        {{ job_title }}
       </div>
       <table class="table table-striped table-hover">
         <tr v-for="app in application":key=app.id>
@@ -19,4 +19,57 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
+
+export default {
+    name: "DriveApplicationView",
+    data() {
+        return {
+            token: null,
+            role: null,
+            id: null,
+            job_title: null,
+            description: null,
+            company: null,
+            application_deadline: null,
+
+            status: null,
+            application: []
+        };
+    },
+    created() {
+        this.token = localStorage.getItem("auth_token");
+        this.role = localStorage.getItem("role");
+        if (this.token == null) {
+      this.$router.push("/login");
+    } else if (this.role != "company") {
+      localStorage.clear();
+      this.$router.push("/login");
+    }
+    },
+    mounted() {
+        const id = this.$route.params.id;
+        axios.get(`http://localhost:5000/drive_applications/${id}`, {
+            headers: {
+                'Authorization': this.token
+            }
+        })
+        .then(response => {
+            console.log("correct response:", response);
+            this.application = response.data.applications;
+            this.job_title = response.data.job_title;
+            this.description = response.data.job_description;
+            this.company = response.data.company;
+        })
+        .catch(error => {
+            console.log("error response:", error);
+        });
+        
+    },
+    methods: {
+        goBack() {
+            this.$router.go(-1);
+        }
+    },
+}
 </script>

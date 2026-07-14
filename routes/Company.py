@@ -37,6 +37,13 @@ class DriveApplications(Resource):
         dr = drive.query.filter_by(drive_id=id).first()
         if not dr:
             return make_response(jsonify({'message': 'Drive not found'}), 404)
+        drive_data = {
+            'id': dr.drive_id,
+            'job_title': dr.job_title,
+            'description': dr.job_description,
+            'application_deadline': dr.application_deadline,
+            'company': dr.company.com_name
+        }
         applications = application.query.filter_by(drive_id=dr.drive_id).all()
         application_list = []
         for app in applications:
@@ -46,4 +53,5 @@ class DriveApplications(Resource):
                 'department': app.student.branch,
                 'status': app.status
             })
-        return make_response(jsonify(application_list), 200)     
+        drive_data['applications'] = application_list
+        return make_response(jsonify(drive_data), 200)     
