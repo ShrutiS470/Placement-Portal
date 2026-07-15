@@ -53,3 +53,28 @@ class StudentApplications(Resource):
             })
         student_data['applications'] = application_list
         return make_response(jsonify(student_data), 200)
+    
+class StudentDrive(Resource):
+    @auth_required('token')
+    @roles_accepted('student')
+    @cache.cached()
+    def get(self, id):
+        comp = company.query.filter_by(com_id=id).first()
+        if not comp:
+            return make_response(jsonify({'message': 'Company not found'}), 404)
+        company_data = {
+            'id': comp.com_id,
+            'name': comp.com_name,
+            'email': comp.user.email,
+            'status': comp.user.active
+        }
+        drives = drive.query.filter_by(com_id=comp.com_id).all()
+        drive_list = []
+        for dr in drives:
+            drive_list.append({
+                'id': dr.drive_id,
+                'job': dr.job_title,
+                'company': dr.company.com_name
+            })
+        company_data['drives'] = drive_list
+        return make_response(jsonify(company_data), 200)

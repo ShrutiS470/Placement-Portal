@@ -4,7 +4,7 @@
         <p>{{ drive.description }}</p>
         <p><strong>{{ drive.company }}</strong></p>
         <p>Application Deadline: {{ drive.application_deadline }}</p>
-        <button v-if="userRole === 'student'" class="btn btn-primary btn-sm">
+        <button v-if="userRole === 'student'" @click="applyNow" class="btn btn-primary btn-sm">
         Apply Now
         </button>
         <button @click="goBack" class="btn btn-outline-secondary btn-sm">
@@ -20,8 +20,18 @@ export default {
     data() {
         return {
             token: null,
+            userRole: null,
+            Stu_id: null,
             drive: ""
         };
+    },
+    created() {
+        this.token = localStorage.getItem("auth_token");
+        this.userRole = localStorage.getItem("role");
+        this.role = localStorage.getItem("role");
+        if (this.token == null) {
+      this.$router.push("/login");
+    } 
     },
     mounted() {
         this.token = localStorage.getItem("auth_token");
@@ -43,6 +53,26 @@ export default {
     methods: {
         goBack() {
             this.$router.go(-1);
+        },
+        applyNow() {
+            const stu_id = localStorage.getItem("Student_id");
+            const drive_id = this.$route.params.id;
+            axios.post('http://localhost:5000/create_application', {
+                stu_id: stu_id,
+                drive_id: drive_id
+            }, {
+                headers: {
+                    'Authorization': this.token
+                }
+            })
+            .then(response => {
+                console.log("Application submitted:", response);
+                alert("Application submitted successfully!");
+            })
+            .catch(error => {
+                console.log("Error submitting application:", error);
+                alert("Error submitting application. Please try again.");
+            });
         }
     },
 }

@@ -98,16 +98,18 @@ from routes.drive import Drive, CreateDrive
 api.add_resource(Drive, '/drive/<int:id>')
 api.add_resource(CreateDrive, '/create_drive')
 
-from routes.application import Application
+from routes.application import Application, CreateApplication
 api.add_resource(Application, '/application/<int:id>')
+api.add_resource(CreateApplication, '/create_application')
 
 from routes.Company import Company, DriveApplications
 api.add_resource(DriveApplications, '/drive_applications/<int:id>')
 api.add_resource(Company, '/company/<int:id>')
 
-from routes.Student import StudentDashboard, StudentApplications
+from routes.Student import StudentDashboard, StudentApplications, StudentDrive
 api.add_resource(StudentDashboard, '/student_dashboard/<int:id>')
 api.add_resource(StudentApplications, '/student_applications/<int:id>')
+api.add_resource(StudentDrive, '/student_drive/<int:id>')
 
 
 if __name__ == '__main__':

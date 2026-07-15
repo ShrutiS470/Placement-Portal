@@ -2,18 +2,19 @@
   <div class="container mt-5">
     <div class="card shadow p-4 mx-auto" style="max-width: 800px;">     
       <h2 class="text-center text-primary mb-4">
-        Welcome {{ name }}
+        {{ name }}
       </h2>
       <div class="card-header bg-primary text-white">
-      Organizations
+      Current Drives
       <router-link class="btn btn-outline-secondary btn-sm" :to="`/application_history/${user_id}`">
           Application History
         </router-link>
     </div>
       <table class="table table-striped table-hover">
-        <tr v-for="com in companies" :key="com.id">
-          <td>{{ com.name }}</td>
-          <td><router-link class="btn btn-outline-secondary btn-sm" :to="`company_drive/${com.id}`">
+        <tr v-for="dr in drives" :key="dr.id">
+          <td>{{ dr.job }}</td>
+          <td>{{ dr.company }}</td>
+          <td><router-link class="btn btn-outline-secondary btn-sm" :to="`/drive_details/${dr.id}`">
           View Details
         </router-link></td>
         </tr>
@@ -25,18 +26,17 @@
 import axios from 'axios';
 
 export default {
-    name: "StudentView",
+    name: "CompanyView",
     data() {
         return {
             token: null,
             role: null,
-            user_id: null,
-            student_id: null,
             email: null,
+            user_id: null,
+            com_id: null,
             name: null,
             status: null,
-            department: null,
-            companies: []
+            drives: []
         };
     },
     created() {
@@ -46,25 +46,22 @@ export default {
 
         if (this.token == null) {
       this.$router.push("/login");
-    } else if (this.role != "student") {
-      localStorage.clear();
-      this.$router.push("/login");
     }
     },
     mounted() {
-        const user_id = this.user_id;
-        axios.get(`http://localhost:5000/student_dashboard/${user_id}`, {
+        const id = this.$route.params.id;
+        axios.get(`http://localhost:5000/student_drive/${id}`, {
             headers: {
                 'Authorization': this.token
             }
         })
         .then(response => {
             console.log("correct response:", response);
-            localStorage.setItem("Student_id", response.data.id);
-            this.name = response.data.name;
             this.email = response.data.email;
-            this.department = response.data.department;
-            this.companies = response.data.companies;
+            localStorage.setItem("Com_id", response.data.id);
+            this.name = response.data.name;
+            this.status = response.data.status;
+            this.drives = response.data.drives;
         })
         .catch(error => {
             console.log("error response:", error);
