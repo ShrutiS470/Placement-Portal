@@ -1,4 +1,4 @@
-from flask import Flask, config, render_template, request, redirect, url_for
+from flask import Flask, config, render_template, request, redirect, url_for, jsonify, make_response
 
 from models import db, user_datastore, company, student, drive, application, placement
 from flask_security import Security, auth_required, roles_required, roles_accepted #pip install flask-security-too
@@ -24,18 +24,18 @@ def create_app():
     from caching import cache
     cache.init_app(init_app)
 
-    '''
+    
     from celery import Celery
     init_celery = Celery(init_app.import_name)
     import celery_config
     init_celery.config_from_object(celery_config)
-    '''
     
-    #return init_app, init_api, init_celery
-    return init_app, init_api
+    
+    return init_app, init_api, init_celery
+    #return init_app, init_api
 
-#app, api, app_celery = create_app()
-app, api = create_app()
+app , api, app_celery = create_app()
+#app, api = create_app()
 
 from celery import Celery
 app_celery = Celery(app.import_name)
@@ -47,35 +47,34 @@ import celerytask
 
 from celery.schedules import crontab
 app_celery.conf.beat_schedule = {
-    "schedule1": {
-        "task": "celerytask.add",
-        "schedule": crontab(minute=7, hour=15),
-        "args": (16, 16)
-    }
+    "daily_shortlisted_reminder": {
+        "task": "celerytask.daily_shortlisted_reminder",
+        "schedule": crontab(minute=0, hour=8)
+    },
+    "monthly-report": {
+        "task": "tasks.monthly_activity_report",
+        "schedule": crontab(
+            day_of_month=1,
+            hour=8,
+            minute=0
+        ),
+    },
 }
 
-#from celery import Task
-'''
-@app_celery.task()
-def add(a,b):
-    return a+b
 
-@app_celery.task()
-def hello():
-    print("Hello world")
-    return "Hello"
-'''
-
-@app.route('/testcelery', methods=['POST'])
-def testcelery():
+@app.route('/export-applications', methods=['POST'])
+@auth_required('token')
+@roles_required('student')
+def post():
     data = request.json
-    a,b = data.get('a'), data.get('b')
-    result = celerytask.hello.delay()
-    celerytask.test_email.delay()
-    #result = celerytask.add.delay(a,b)
-    while not result.ready():
+    student_id = data.get('student_id')
+    task = celerytask.export_application_csv.delay(student_id)
+    while not task.ready():
         pass
-    return {"status":result.status, "id":result.id}, 201
+    return jsonify({
+            "message": "CSV export started",
+            "task_id": task.id
+        })
 
 @app.route('/', methods=['POSt'])
 @auth_required('token')#decorator to require authentication for this route, using token-based authentication

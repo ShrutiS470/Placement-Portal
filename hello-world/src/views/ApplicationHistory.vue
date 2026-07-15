@@ -6,6 +6,9 @@
       </h2>
       <div class="card-header bg-primary text-white">
       Applications History
+      <button class="btn btn-success" @click="exportApplications">
+      Export Applications
+      </button>
       <button @click="goBack" class="btn btn-outline-secondary btn-sm">
         ← Back
         </button>
@@ -73,6 +76,18 @@ export default {
     methods: {
         goBack() {
             this.$router.go(-1);
+        },
+        exportApplications() {
+            const student_id = localStorage.getItem("Student_id");
+            axios.post('http://localhost:5000/export-applications', {
+                student_id: student_id
+            }, {
+                headers: {
+                    'Authorization': this.token
+                }
+            }).catch(error => {
+                console.log("error response:", error);
+            });
         }
     },
 }
