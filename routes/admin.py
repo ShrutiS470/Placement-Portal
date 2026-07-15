@@ -52,3 +52,15 @@ class AdminDashboard(Resource):
             'drives': drive_list,
             'applications': application_list
         })
+    
+    @auth_required('token')
+    @roles_required('admin')
+    def put(self):
+        data = request.get_json()
+        com_id = data.get('com_id')
+        comp = company.query.filter_by(com_id=com_id).first()
+        if not comp:
+            return make_response(jsonify({'message': 'Company not found'}), 404)
+        comp.user.active = True
+        db.session.commit()
+        return make_response(jsonify({'message': 'Company approved successfully'}), 200)

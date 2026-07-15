@@ -26,6 +26,10 @@
       <table class="table table-striped table-hover">
         <tr v-for="comp in company" :key="comp.id">
           <td v-if="comp.status !== true">{{ comp.name }}</td>
+          <td v-if="comp.status !== true">
+            <button class="btn btn-outline-secondary btn-sm" @click="Approve(comp.id)">
+          Approve
+          </button></td>
         </tr>
       </table>
       <div class="card-header bg-primary text-white">
@@ -99,6 +103,20 @@ export default {
         console.log("error response:", error);
       });
 
+    },
+    methods: {
+      Approve(com_id) {
+        axios.put(`http://localhost:5000/admin`, { com_id: com_id }, {
+          headers: { 'Authorization': this.token }
+        }).then(response => {
+          console.log("correct response:", response);
+          alert("Company Approved Successfully");
+          this.$router.go(0);
+        }).
+        catch(error => {
+          console.log("error response:", error);
+        });
+      }
     }
   }
 </script>

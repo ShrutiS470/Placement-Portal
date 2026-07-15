@@ -63,6 +63,7 @@ export default {
       })
       .then(response => {
         console.log("correct response:", response);
+        alert("Login Successful");
 
         if (response.data.status == "signin successful") {
           localStorage.setItem("auth_token", response.data.auth_token)
@@ -83,6 +84,7 @@ export default {
       })
       .catch(error => {
         console.log("error response:", error);
+        alert("Login Failed");
       });
     }
   }
