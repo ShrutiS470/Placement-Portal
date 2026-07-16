@@ -52,10 +52,10 @@ app_celery.conf.beat_schedule = {
         "schedule": crontab(minute=0, hour=8)
     },
     "monthly-report": {
-        "task": "tasks.monthly_activity_report",
+        "task": "celerytask.monthly_activity_report",
         "schedule": crontab(
             day_of_month=1,
-            hour=8,
+            hour=9,
             minute=0
         ),
     },

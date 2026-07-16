@@ -2,7 +2,8 @@ from models import db, user_datastore, student, company, drive, application, pla
 from app import create_app
 from datetime import datetime
 
-app, _ = create_app()
+app, _, _ = create_app()
+#app, _ = create_app()
 
 with app.app_context():
     db.create_all()
@@ -42,10 +43,10 @@ with app.app_context():
     db.session.commit()
     print("Company and Student records created")
 
-    drive1 = drive(com_id=company1.com_id, job_title='Software Engineer', job_description='Develop and maintain software applications.', eligibility_criteria='B.Tech in Computer Science', application_deadline=datetime(2026, 3, 15), approval_status='approved')
-    drive2 = drive(com_id=company1.com_id, job_title='Data Analyst', job_description='Analyze data and generate insights.', eligibility_criteria='B.Tech in Computer Science or related field', application_deadline=datetime(2026, 3, 14), approval_status='approved')
-    drive3 = drive(com_id=company1.com_id, job_title='Product Manager', job_description='Oversee product development and strategy.', eligibility_criteria='B.Tech in Computer Science or related field', application_deadline=datetime(2026, 3, 15), approval_status='approved')
-    drive4 = drive(com_id=company1.com_id, job_title='UX Designer', job_description='Design user interfaces and experiences.', eligibility_criteria='B.Tech in Computer Science or related field', application_deadline=datetime(2026, 3, 16), approval_status='approved')
+    drive1 = drive(com_id=company1.com_id, job_title='Software Engineer', job_description='Develop and maintain software applications.', eligibility_criteria='B.Tech in Computer Science', application_deadline=datetime(2026, 8, 15), approval_status='approved')
+    drive2 = drive(com_id=company1.com_id, job_title='Data Analyst', job_description='Analyze data and generate insights.', eligibility_criteria='B.Tech in Computer Science or related field', application_deadline=datetime(2026, 8, 14), approval_status='approved')
+    drive3 = drive(com_id=company1.com_id, job_title='Product Manager', job_description='Oversee product development and strategy.', eligibility_criteria='B.Tech in Computer Science or related field', application_deadline=datetime(2026, 8, 15), approval_status='approved')
+    drive4 = drive(com_id=company1.com_id, job_title='UX Designer', job_description='Design user interfaces and experiences.', eligibility_criteria='B.Tech in Computer Science or related field', application_deadline=datetime(2026, 8, 16), approval_status='approved')
     db.session.add(drive1)
     db.session.add(drive2)
     db.session.add(drive3)
@@ -53,10 +54,10 @@ with app.app_context():
     db.session.commit()
     print("Drive records created")
 
-    application1 = application(stu_id=student1.stu_id, drive_id=drive1.drive_id, status='applied', date=datetime(2026, 2, 20))
-    application2 = application(stu_id=student1.stu_id, drive_id=drive2.drive_id, status='applied', date=datetime(2026, 2, 21))
-    application3 = application(stu_id=student1.stu_id, drive_id=drive3.drive_id, status='applied', date=datetime(2026, 2, 22))
-    application4 = application(stu_id=student1.stu_id, drive_id=drive4.drive_id, status='applied', date=datetime(2026, 2, 23))
+    application1 = application(stu_id=student1.stu_id, drive_id=drive1.drive_id, status='applied', date=datetime(2026, 7, 20))
+    application2 = application(stu_id=student1.stu_id, drive_id=drive2.drive_id, status='applied', date=datetime(2026, 7, 21))
+    application3 = application(stu_id=student1.stu_id, drive_id=drive3.drive_id, status='applied', date=datetime(2026, 7, 22))
+    application4 = application(stu_id=student1.stu_id, drive_id=drive4.drive_id, status='applied', date=datetime(2026, 7, 23))
     db.session.add(application1)
     db.session.add(application2)
     db.session.add(application3)
@@ -64,7 +65,7 @@ with app.app_context():
     db.session.commit()
     print("Application records created")
 
-    placement1 = placement(stu_id=student1.stu_id, com_id=company1.com_id, job_title='Software Engineer', salary=10.0, date_of_joining=datetime(2026, 4, 1))
+    placement1 = placement(stu_id=student1.stu_id, com_id=company1.com_id, job_title='Software Engineer', salary=10.0, date_of_joining=datetime(2026, 8, 1))
     db.session.add(placement1)
     db.session.commit()
     print("Placement record created")

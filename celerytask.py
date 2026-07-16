@@ -2,6 +2,9 @@ import os
 import csv
 from celery import Task
 from app import app_celery, create_app
+from flask_mail import Message
+from mailer import mailer
+
 app_instance, _ ,_=create_app()
 
 class appContext(Task):
@@ -9,10 +12,11 @@ class appContext(Task):
         with app_instance.app_context():
             return self.run(*args, **kwargs)
 
-from models import db, user_datastore, application, drive
+
 
 @app_celery.task(base=appContext)
 def monthly_activity_report():
+    from models import drive, application
     total_drives = drive.query.count()
     total_applications = application.query.count()
 
@@ -40,17 +44,19 @@ def monthly_activity_report():
 
 @app_celery.task(base=appContext)
 def daily_shortlisted_reminder():
-    shortlisted_applications = application.query.filter_by(status='shortlisted').all()
+    from models import application
+    shortlisted_applications = application.query.filter_by(status='Shortlisted').all()
     for app in shortlisted_applications:
         student_email = app.student.user.email
         drive_title = app.drive.job_title
         company_name = app.drive.company.com_name
-        mailer.send_email(
+        message = Message(
             subject='Shortlisted for Drive',
             recipients=[student_email],
             body=f'Congratulations! You have been shortlisted for the drive "{drive_title}" by "{company_name}". Please check your application status for further details.'
         )
-        return f"{len(shortlisted_applications)} reminder emails sent"
+        mailer.send(message)
+    return f"{len(shortlisted_applications)} reminder emails sent"
     
 @app_celery.task(base=appContext)
 def export_application_csv(student_id):
